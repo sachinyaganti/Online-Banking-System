@@ -1,0 +1,50 @@
+MySQL WORKBENCH CODE
+CREATE DATABASE banking_system;
+USE banking_system;
+
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    full_name VARCHAR(100),
+    email VARCHAR(100),
+    role ENUM('ADMIN', 'CUSTOMER') DEFAULT 'CUSTOMER'
+);
+
+CREATE TABLE accounts (
+    account_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    account_number VARCHAR(20) UNIQUE NOT NULL,
+    account_type ENUM('SAVINGS', 'CURRENT') DEFAULT 'SAVINGS',
+    balance DECIMAL(15,2) DEFAULT 0.00,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+CREATE TABLE transactions (
+    transaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    from_account VARCHAR(20),
+    to_account VARCHAR(20),
+    amount DECIMAL(15,2) NOT NULL,
+    transaction_type ENUM('DEPOSIT', 'WITHDRAWAL', 'TRANSFER') NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    note VARCHAR(255)
+);
+
+-- Admin user
+INSERT INTO users (username, password, full_name, email, role)
+VALUES ('admin', 'abc123', 'Admin User', 'admin@admin.com', 'ADMIN');
+
+-- Customer user
+INSERT INTO users (username, password, full_name, email, role)
+VALUES ('john_doe', 'abc123', 'Client User', 'client@client.com', 'CLIENT');
+
+
+-- Create account for John Doe
+INSERT INTO accounts (user_id, account_number, account_type, balance)
+VALUES (2, '1234567890', 'SAVINGS', 10000.00);
+
+INSERT INTO transactions (from_account, to_account, amount, transaction_type, note)
+VALUES ('1234567890', '9876543210', 2000.00, 'TRANSFER', 'Sent to Alice');
+
+
+**
